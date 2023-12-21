@@ -175,6 +175,7 @@ hilbertBasis Matrix := Matrix => o -> (A ->(
      getMatrix(filename|".hil")
      ))
 
+rays = method()
 rays Matrix := Matrix => (A ->(
      filename := getFilename();
      if debugLevel >= 1 then << "using temporary file name " << filename << endl;

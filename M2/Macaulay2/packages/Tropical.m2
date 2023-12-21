@@ -44,7 +44,7 @@ export{
   "IsHomogeneous",
   "Symmetry",
   "visualizeHypersurface",
-  "Valuation",
+--  "Valuation",
   "BergmanFan"
   }
 
@@ -122,14 +122,14 @@ toTropPoly (Matrix,Matrix) := (termList,coeffs) ->(
 minmax = () -> (if (Tropical#Options#Configuration#"tropicalMax") then return "Max" else return "Min";)
 
 visualizeHypersurface = method(Options=>{
-	Valuation=>null
+	"Valuation"=>null
 	})
 
 visualizeHypersurface (RingElement) := o-> (polyn)->(
     polynomial := toTropPoly(polyn);
-    if (instance(o.Valuation,Number)) then polynomial = toTropPoly(pAdicCoeffs(o.Valuation,polyn));
-    if (instance(o.Valuation,RingElement)) then polynomial = toTropPoly(polynomialCoeffs(o.Valuation,polyn));
-    if (instance(o.Valuation,String) and o.Valuation == "constant") then polynomial = toTropPoly(sum flatten entries (coefficients polyn)_0);
+    if (instance(o#"Valuation",Number)) then polynomial = toTropPoly(pAdicCoeffs(o#"Valuation",polyn));
+    if (instance(o#"Valuation",RingElement)) then polynomial = toTropPoly(polynomialCoeffs(o#"Valuation",polyn));
+    if (instance(o#"Valuation",String) and o#"Valuation" == "constant") then polynomial = toTropPoly(sum flatten entries (coefficients polyn)_0);
     print polynomial;
     filename := temporaryFileName();
     filename << "use application 'tropical';" << endl << "visualize_in_surface(new Hypersurface<"|minmax()|">(POLYNOMIAL=>toTropicalPolynomial(\""|polynomial|"\")));" << close;
@@ -841,20 +841,20 @@ doc ///
 	Key
 		visualizeHypersurface
 		(visualizeHypersurface,RingElement)
-		Valuation
+--		"Valuation"
 	Headline
 		visualize the tropical hypersurface of the given polynomial
 	Usage
 		visualizeHypersurface(polyn)
-		visualizeHypersurface(Valuation=>p,polyn)
-		visualizeHypersurface(Valuation=>t,polyn)
+		visualizeHypersurface("Valuation"=>p,polyn)
+		visualizeHypersurface("Valuation"=>t,polyn)
 	Inputs
 		polyn: RingElement
 		    polynomial
-		Valuation=>Number
-		    use p-adic coefficients with given p
-		Valuation=>RingElement
-		    use coefficients in R[t] with given t
+--		"Valuation"=>Number
+--		    use p-adic coefficients with given p
+--		"Valuation"=>RingElement
+--		    use coefficients in R[t] with given t
 	Description
 	    Text
 	        This function wraps the Polymake visualization for a
@@ -862,13 +862,13 @@ doc ///
 		should be entered as a homogeneous polynomial. Running
 		this method opens an image in a new browser window. The
 		coefficients can be interpreted as p-adic coefficients or as
-		polynomials via the option @TO Valuation@. Examples are
+		polynomials via the option @TT "Valuation"@. Examples are
 		commented out because they open a new browser window.
 	    Example
 	    	--Examples are commented because they open in browser. Uncomment to run.
     	        R=ZZ[x,y,z]
 		f=2*x*y+x*z+y*z+z^2
-		--visualizeHypersurface(Valuation=>2,f)
+		--visualizeHypersurface("Valuation"=>2,f)
 
 		f=2*x^2+x*y+2*y^2+x*z+y*z+2*z^2
 		--visualizeHypersurface(f)
