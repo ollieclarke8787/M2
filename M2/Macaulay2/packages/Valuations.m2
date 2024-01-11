@@ -240,6 +240,27 @@ localRingValuation LocalRing := R -> (
 -------------------------------- example77 Valuation ---------------------------
 --------------------------------------------------------------------------------
 
+-- Todo: break this into two parts:
+-- >> first get the tropical variety (we may assume that the ideal is prime)
+--    the fan is given by F_0 in the code below (taken from Tropical Package)
+--    implements the gfanInterface tropical computation
+-- >> cache the fan in the ideal
+--
+-*
+cone := gfanTropicalStartingCone I;
+--check if resulting fan would be empty
+if instance(cone, String) then return cone;
+if(newSymmetry == {}) then
+F= gfanTropicalTraverse cone
+else
+F= gfanTropicalTraverse (cone, "symmetry" => newSymmetry);
+    
+    --check if resulting fan would be empty
+    if (instance(F,String)) then return F;
+    T=tropicalCycle(F_0,F_1))
+*- 
+-- >> modify the code below to use our new tropical variety function
+
 primeConesOfIdeal = I -> (
     F:=tropicalVariety(I, IsHomogeneous=>true,Prime=>true);
     r:=rays(F);
@@ -296,10 +317,12 @@ positivity = (f, matL) -> (
 coneToValuation = (coneRays, I, S) -> (
     F := tropicalVariety(I, IsHomogeneous=>true,Prime=>true);
     M := coneToMatrix(coneRays);
-    scaledM := (positivity(F, {M}))/(i -> sub(i, ZZ));
+    scaledM := (positivity(F, {-M}))/(i -> sub(i, ZZ));
     e := symbol e;
     y := symbol y;
-    T := QQ[e_1, e_2, e_3, y, MonomialOrder=>{Weights=>((entries scaledM_0)_0), Weights=>((entries scaledM_0)_1)}];
+    weightList := for row in entries scaledM_0 list Weights => row;
+    T := QQ[e_1, e_2, e_3, y, MonomialOrder => weightList];
+    --T := QQ[e_1, e_2, e_3, y, MonomialOrder=>{Weights=>((entries scaledM_0)_0), Weights=>((entries scaledM_0)_1)}];
     val := leadTermValuation(T);
     orderedM := orderedQQn(2, {Lex});
     func := (f -> (
@@ -981,4 +1004,5 @@ uninstallPackage "Valuations"
 restart
 installPackage "Valuations"
 
+needsPackage "Valuations"
 
