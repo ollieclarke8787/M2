@@ -13,8 +13,8 @@ newPackage("Valuations",
         DebuggingMode => true,
         HomePage => "https://github.com/Macaulay2/Workshop-2023-Minneapolis/tree/valuations",
         Configuration => {},
-        PackageExports => {"LocalRings", "SubalgebraBases", "InvariantRing", "Tropical", "gfanInterface", "Binomials"}
-        --PackageExports => {"LocalRings", "SubalgebraBases", "InvariantRing", "gfanInterface", "Binomials"}
+        --PackageExports => {"LocalRings", "SubalgebraBases", "InvariantRing", "Tropical", "gfanInterface", "Binomials"}
+        PackageExports => {"LocalRings", "SubalgebraBases", "InvariantRing", "gfanInterface", "Binomials"}
 	)
 
 ----- Possibly move to other packages
@@ -240,31 +240,28 @@ localRingValuation LocalRing := R -> (
 -------------------------------- example77 Valuation ---------------------------
 --------------------------------------------------------------------------------
 
--- Todo: break this into two parts:
--- >> first get the tropical variety (we may assume that the ideal is prime)
---    the fan is given by F_0 in the code below (taken from Tropical Package)
---    implements the gfanInterface tropical computation
--- >> cache the fan in the ideal
+-- internalTropicalVariety -- simple tropical variety computation
+-- input:
+-- I : Ideal: prime, homogeneous
 --
--*
-cone := gfanTropicalStartingCone I;
---check if resulting fan would be empty
-if instance(cone, String) then return cone;
-if(newSymmetry == {}) then
-F= gfanTropicalTraverse cone
-else
-F= gfanTropicalTraverse (cone, "symmetry" => newSymmetry);
-    
-    --check if resulting fan would be empty
-    if (instance(F,String)) then return F;
-    T=tropicalCycle(F_0,F_1))
-*- 
--- >> modify the code below to use our new tropical variety function
+-- output:
+-- T : tropical polyhedral fan trop(I) without weights
+--  
+internalTropicalVariety = method()
+internalTropicalVariety Ideal := I -> (
+    if not I.cache#?"TropicalVariety" then (
+    	startCone := gfanTropicalStartingCone I;
+    	T := gfanTropicalTraverse startCone;
+    	I.cache#"TropicalVariety" = T_0;
+	);
+    I.cache#"TropicalVariety"
+    )
+
 
 primeConesOfIdeal = I -> (
-    F:=tropicalVariety(I, IsHomogeneous=>true,Prime=>true);
-    r:=rays(F);
-    c:=maxCones(F);
+    F := internalTropicalVariety I;
+    r := rays F;
+    c := maxCones F;
     cns := for i in c list(r_i);
     inCns := for c in cns list (flatten entries( c * transpose matrix{toList(numColumns(c) : 1)}));
     L:= for i from 0 to #cns-1 list (
@@ -272,7 +269,7 @@ primeConesOfIdeal = I -> (
 	H := gfanInitialForms(J, -1*(inCns#i), "ideal" =>true);
 	K := H_1;
 	if binomialIsPrime(ideal(K)) then cns#i);
-    delete(null,L)
+    delete(null, L)
     )
 						    
 -- given a set of rays of a 2D cone,
@@ -315,8 +312,8 @@ positivity = (f, matL) -> (
 
 -- TODO need to generalize!
 coneToValuation = (coneRays, I, S) -> (
-    F := tropicalVariety(I, IsHomogeneous=>true,Prime=>true);
-    M := coneToMatrix(coneRays);
+    F := internalTropicalVariety I;
+    M := coneToMatrix coneRays;
     scaledM := (positivity(F, {-M}))/(i -> sub(i, ZZ));
     e := symbol e;
     y := symbol y;
@@ -719,9 +716,14 @@ doc ///
                 matrix {{-11, -2}, {1, 19}, {13, -6}, {-10, -6}}
                 }
        Text 
-            Turn them into weights:
+            Turn them into weights. 
+	    
+	    Note that @TT "internalTropicalVariety"@ is NOT exported
+	    
+	    REMOVE THIS TEXT AND NEXT EXAMPLE BEFORE RELEASE!
        Example
-	    flatten (C/coneToMatrix/(i -> positivity(tropicalVariety I, {i})))
+            debug Valuations
+            flatten (C/coneToMatrix/(i -> positivity(internalTropicalVariety I, {i})))
        Text
             create weight valuations on the polynomial ring S
        Example
