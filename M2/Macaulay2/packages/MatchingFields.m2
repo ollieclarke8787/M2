@@ -1034,7 +1034,7 @@ isCoherent MatchingField := MF -> (
 computeWeightMatrix = method()
 computeWeightMatrix MatchingField := MF -> (
     if not isCoherent MF then (
-        error("expected a coherent matching field: perhaps try 'MonomialOrder => \"none\"'");
+        error("expected a coherent matching field");
         );
     C := weightMatrixCone MF;
     CRays := rays C;
