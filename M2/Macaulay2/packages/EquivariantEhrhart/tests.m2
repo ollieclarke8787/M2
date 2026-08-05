@@ -88,3 +88,9 @@ TEST /// -* simple isEffective tests *-
     g = matrix randomPermutation ambDim P;
     assert(isEffective (equivariantEhrhartSeries(P,{g}))_0);
 ///
+
+TEST /// -*check that a cyclic group is generated in order*-
+    g = (matrix "0,1;1,0") ++ (matrix "0,0,1;1,0,0;0,1,0");
+    expectedGroup = {g^0, g^1, g^2, g^3, g^4, g^5};
+    assert(generateGroup {g} == expectedGroup);
+///
