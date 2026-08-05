@@ -161,18 +161,8 @@ representationRing ZZ := opts -> n -> (
     R := QQ(monoid[a_1 .. a_n]);
     T := symmetricGroupTable R;
     M := sub(T.table, QQ);
-    -- N := inverse transpose M;
-    -- m := numRows M;
     m := numColumns M;
     S := QQ(monoid[x_1 .. x_m]);
-    -*
-    X := matrix {gens S};
-    I := ideal flatten for i from 0 to m-1 list for j from 0 to i list (
-        -- product of rows i and j in M
-        S_i * S_j - (X * N * transpose matrix {for k from 0 to m-1 list M_(i, k) * M_(j, k)})_(0,0)
-        );
-    if opts.ReturnTable then (S/I, T) else S/I
-    *-
     if opts.ReturnTable then (S, M) else S
     )
 
