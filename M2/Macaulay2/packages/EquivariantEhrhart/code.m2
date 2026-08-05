@@ -240,61 +240,48 @@ equivariantEhrhartSeries (Polyhedron, List) := opts -> (userP, userGList) -> (
         -- g -> g ++ {{1}} (direct sum)
         gList = apply(gList, g -> g ++ id_((ring g)^1));
         );
-
     -- check that P is symmetric with respect to gList
     for g in gList do (
         if not isSymmetric(P, g) then error("Polytope is not invariant under matrix");
         );
-
+    if not #gList == 1 then (
+        error("Expected one generator (only cyclic groups are supported now)");
+        );
     groupElements := generateGroup gList;
     -- The order of the elements is {g^0, g^1, ..., g^s}
-
-    ----------
-    -- Mark --
-    ----------
-
-    fixedPolytopeList := apply(groupElements, g' -> fixedPolytope(P, g')); -- Todo get the fixed polytopes									Task (2)
-
-    m := #groupElements; -- Number of group elements (since group is abelian)
-    -- We are assuming gList has length 1. If the group is not cyclic we need a different method
-
-		w := getSymbol "w";
-		-- todo: define this properly with a monoid
-		C := QQ[w];
-		QQw := C / ideal cyclotomicPoly(m, w);
-		w = QQw_0;
-
-		-- representation ring
-		X := getSymbol "X";
-		R := QQw[X_1 .. X_m];
-
-
-		-- character table
-		T := matrix for i from 0 to m-1 list for j from 0 to m-1 list w^(i*j);
-
-		-- MARK
-		Rt := R[getSymbol "t"];
-		t := Rt_0;
-		hStarList := (Pg -> hStarPolynomial(Pg, Rt, ReturnDenominator => true)) \ fixedPolytopeList;
-		ehrhartHStarList := for i from 0 to m-1 list (
-				h := sub(groupElements_i, Rt);
-				detRep := det(id_(Rt^n) - t*h);
-				(hStarNum, hStarDenom) := hStarList_i;
-				hStarDenom = value hStarDenom;
-				if not zero((hStarNum * detRep) % hStarDenom) then (
-						print "bad symmetry:";
-						print h;
-						error("equivariant hStar not polynomial");
-						);
-				(hStarNum * detRep) // hStarDenom
-				); -- list of Ehrhart H* polynomials note that denominator is det(I - tg)
-		H := (matrix {ehrhartHStarList} * (inverse T) * transpose matrix {gens R})_(0,0);
-		result := {H};
-		if opts.ReturnTable then result = result | {T};
-		if opts.ReturnClassReps then result = result | {groupElements};
-		if opts.ReturnHStarList then result = result | {ehrhartHStarList};
-		result
-	  )
+    fixedPolytopeList := apply(groupElements, g' -> fixedPolytope(P, g'));
+    -- Character table has entries cyclotomic extension of QQ
+    m := #groupElements;
+    C := QQ(monoid[getSymbol "w"]);
+    QQw := C / ideal cyclotomicPoly(m, w);
+    w := QQw_0;
+    -- representation ring
+    X := getSymbol "X";
+    R := QQw(monoid[X_1 .. X_m]);
+    -- character table
+    T := matrix for i from 0 to m-1 list for j from 0 to m-1 list w^(i*j);
+    Rt := R[getSymbol "t"];
+    t := Rt_0;
+    hStarList := (Pg -> hStarPolynomial(Pg, Rt, ReturnDenominator => true)) \ fixedPolytopeList;
+    ehrhartHStarList := for i from 0 to m-1 list (
+        h := sub(groupElements_i, Rt);
+        detRep := det(id_(Rt^n) - t*h);
+        (hStarNum, hStarDenom) := hStarList_i;
+        hStarDenom = value hStarDenom;
+        if not zero((hStarNum * detRep) % hStarDenom) then (
+            print "bad symmetry:";
+            print h;
+            error("equivariant hStar not polynomial");
+            );
+        (hStarNum * detRep) // hStarDenom
+        ); -- list of Ehrhart H* polynomials note that denominator is det(I - tg)
+    H := (matrix {ehrhartHStarList} * (inverse T) * transpose matrix {gens R})_(0,0);
+    result := {H};
+    if opts.ReturnTable then result = result | {T};
+    if opts.ReturnClassReps then result = result | {groupElements};
+    if opts.ReturnHStarList then result = result | {ehrhartHStarList};
+    result
+    )
 
 
 makeCodimensionOfSetupEqualOne = method()
