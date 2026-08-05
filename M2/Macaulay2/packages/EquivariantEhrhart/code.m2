@@ -32,7 +32,7 @@ isSymmetric(Polyhedron, List) := Boolean => (P, L) -> (
 generateGroup = method(
     Options => {
         Verbose => false,
-        MaxComputeTime => 60, -- raises ana exception if computation takes more than 60s
+        MaxComputeTime => 60, -- raises an exception if computation takes more than 60s
         }
     )
 
