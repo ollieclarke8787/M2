@@ -45,7 +45,25 @@
     interfacing package of its own.
     
     2. Add hypersimplex and permutohedron into Polyhedra package as standard constructions 
-    
+
+Here's how the code for hypersimplex and permutohedron might be implemented.
+```macaulay2
+-- could add these two to Polyhedra
+
+hypersimplex
+hypersimplex = method()
+hypersimplex(ZZ, ZZ) := (n, k) -> (
+    convexHull transpose matrix for s in subsets(n, k) list (
+    for i from 0 to n-1 list if member(i, s) then 1 else 0
+    )
+)
+
+permutohedron = method()
+permutohedron ZZ := n -> (
+    convexHull transpose matrix permutations n
+)
+```
+
     
 # DONE
 

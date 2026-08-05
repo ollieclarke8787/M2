@@ -132,25 +132,6 @@ fixedPolytope(Polyhedron, Matrix) := Polyhedron => (P, g) -> (
     intersection(P, gFixedSpace)
     )
 
-
-
--- could add these two to Polyhedra
-
--- hypersimplex
--- hypersimplex = method()
--- hypersimplex(ZZ, ZZ) := (n, k) -> (
---     convexHull transpose matrix for s in subsets(n, k) list (
---     for i from 0 to n-1 list if member(i, s) then 1 else 0
---     )
--- )
-
--- permutohedron = method()
--- permutohedron ZZ := n -> (
---     convexHull transpose matrix permutations n
--- )
-
-
-
 -- representation ring of Sn over QQ
 -- order of the rows and cols of character table
 -- is given by 'partitions n'
