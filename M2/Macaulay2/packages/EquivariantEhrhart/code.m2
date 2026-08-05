@@ -110,10 +110,6 @@ partitionToPermutation List := List => L -> (
         )
     )
 
-----------
--- MARK --
-----------
-
 -- get conjugacy class reps for Sn
 -- living as n x n permutation matrices
 
@@ -144,14 +140,14 @@ fixedPolytope(Polyhedron, Matrix) := Polyhedron => (P, g) -> (
 -- hypersimplex = method()
 -- hypersimplex(ZZ, ZZ) := (n, k) -> (
 --     convexHull transpose matrix for s in subsets(n, k) list (
--- 	for i from 0 to n-1 list if member(i, s) then 1 else 0
--- 	)
+--     for i from 0 to n-1 list if member(i, s) then 1 else 0
 --     )
+-- )
 
 -- permutohedron = method()
 -- permutohedron ZZ := n -> (
 --     convexHull transpose matrix permutations n
---     )
+-- )
 
 
 
@@ -162,19 +158,19 @@ representationRing = method(Options => {ReturnTable => false})
 representationRing ZZ := opts -> n -> (
     a := getSymbol "a";
     x := getSymbol "X";
-    R := QQ[a_1 .. a_n];
+    R := QQ(monoid[a_1 .. a_n]);
     T := symmetricGroupTable R;
     M := sub(T.table, QQ);
     -- N := inverse transpose M;
     -- m := numRows M;
-	m := numColumns M;
-    S := QQ[x_1 .. x_m];
+    m := numColumns M;
+    S := QQ(monoid[x_1 .. x_m]);
     -*
     X := matrix {gens S};
     I := ideal flatten for i from 0 to m-1 list for j from 0 to i list (
-	-- product of rows i and j in M
-	S_i * S_j - (X * N * transpose matrix {for k from 0 to m-1 list M_(i, k) * M_(j, k)})_(0,0)
-	);
+        -- product of rows i and j in M
+        S_i * S_j - (X * N * transpose matrix {for k from 0 to m-1 list M_(i, k) * M_(j, k)})_(0,0)
+        );
     if opts.ReturnTable then (S/I, T) else S/I
     *-
     if opts.ReturnTable then (S, M) else S
@@ -184,70 +180,83 @@ representationRing ZZ := opts -> n -> (
 -- EES of a polytope invariant under Sn
 equivariantEhrhartSeries = method(
     Options => {
-	ReturnTable => true,
-	ReturnHStarList => true,
-	ReturnClassReps => true
-	})
+        ReturnTable => true,
+        ReturnHStarList => true,
+        ReturnClassReps => true
+        })
 equivariantEhrhartSeries Polyhedron := opts -> P -> (
-		n := numRows vertices P;
-		-- check P invariant under Sn
-		g1 := matrix permutation rotate(1, toList(1..n));
-		g2 := matrix extend(transposition 1, n);
-		if not (isSymmetric(P, g1) and isSymmetric(P, g2)) then error("polytope is not Sn invariant");
-		conjClassRepMats := cycleTypeRepresentatives n; 
-		fixedPolytopeList := (g -> fixedPolytope(P, g)) \ conjClassRepMats;
-		(R, T) := representationRing(n, ReturnTable => true);
-		m := numgens R; -- equals number of conj classes
-		Rt := R[getSymbol "t"];
-		t := Rt_0;
-		hStarList := (Pg -> hStarPolynomial(Pg, Rt, ReturnDenominator => true)) \ fixedPolytopeList;
-		ehrhartHStarList := for i from 0 to m-1 list (
-				g := sub(conjClassRepMats_i, Rt);
-				detRep := det(id_(Rt^n) - t*g);
-				(hStarNum, hStarDenom) := hStarList_i;
-				hStarDenom = value hStarDenom;
-				if not zero((hStarNum * detRep) % hStarDenom) then (
-						print "bad symmetry:";
-						print g;
-						error("equivariant hStar not polynomial");
-						);
-				(hStarNum * detRep) // hStarDenom
-				); -- list of Ehrhart H* polynomials note that denominator is det(I - tg)
-		H := (matrix {ehrhartHStarList} * (inverse T) * transpose matrix {gens R})_(0,0);
-		result := {H};
-		if opts.ReturnTable then result = result | {T};
-		if opts.ReturnClassReps then result = result | {toList \ partitions n};
-		if opts.ReturnHStarList then result = result | {ehrhartHStarList};
-		result
-		)
+    n := numRows vertices P;
+    -- check P invariant under Sn
+    g1 := matrix permutation rotate(1, toList(1..n));
+    g2 := matrix extend(transposition 1, n);
+    if not (isSymmetric(P, g1) and isSymmetric(P, g2)) then (
+        error("polytope is not Sn invariant");
+        );
+    conjClassRepMats := cycleTypeRepresentatives n;
+    fixedPolytopeList := (g -> fixedPolytope(P, g)) \ conjClassRepMats;
+    (R, T) := representationRing(n, ReturnTable => true);
+    m := numgens R; -- equals number of conj classes
+    Rt := R[getSymbol "t"];
+    t := Rt_0;
+    hStarList := (Pg -> hStarPolynomial(Pg, Rt, ReturnDenominator => true)) \ fixedPolytopeList;
+    ehrhartHStarList := for i from 0 to m-1 list (
+        g := sub(conjClassRepMats_i, Rt);
+        detRep := det(id_(Rt^n) - t*g);
+        (hStarNum, hStarDenom) := hStarList_i;
+        hStarDenom = value hStarDenom;
+        if not zero((hStarNum * detRep) % hStarDenom) then (
+            print "bad symmetry:";
+            print g;
+            error("equivariant hStar not polynomial");
+            );
+        (hStarNum * detRep) // hStarDenom
+        ); -- list of Ehrhart H* polynomials note that denominator is det(I - tg)
+    H := (matrix {ehrhartHStarList} * (inverse T) * transpose matrix {gens R})_(0,0);
+    result := {H};
+    if opts.ReturnTable then result = result | {T};
+    if opts.ReturnClassReps then result = result | {toList \ partitions n};
+    if opts.ReturnHStarList then result = result | {ehrhartHStarList};
+    result
+    )
+
+-- equivariantEhrhartSeries(P, M) = evaluation of equivariantEhrhartSeries at M
 equivariantEhrhartSeries(Polyhedron, Matrix) := opts -> (P, M) ->  (
-	ehrhartSeries fixedPolytope(P, M)
+    ehrhartSeries fixedPolytope(P, M)
     )
 
 -- EES of a polytope under action of cyclic group generated by g
-
 equivariantEhrhartSeries (Polyhedron, List) := opts -> (userP, userGList) -> (
-		local P;
-		local gList;
-		n := ambDim userP;
+    local P;
+    local gList;
+    n := ambDim userP;
 
-		-- check that the polytope is codimension 1:
-		(P, gList) = if dim userP < n-1 then  makeCodimensionOfSetupEqualOne(userP, userGList) else (userP, userGList);
-		n = ambDim P;
+    -- check that the polytope is codimension 1:
+    (P, gList) = if dim userP < n-1 then  makeCodimensionOfSetupEqualOne(userP, userGList) else (userP, userGList);
+    n = ambDim P;
+    if dim P == n then (
+        -- v -> (v,1) for each vertex of P
+        numVerts := numColumns vertices P;
+        P = convexHull (vertices P || matrix {toList(numVerts : 1)});
+        -- g -> g ++ {{1}} (direct sum)
+        gList = apply(gList, g -> g ++ id_((ring g)^1));
+        );
 
+    -- check that P is symmetric with respect to gList
+    for g in gList do (
+        if not isSymmetric(P, g) then error("Polytope is not invariant under matrix");
+        );
 
-		if dim P == n then error("add another row");
+    groupElements := generateGroup gList;
+    -- The order of the elements is {g^0, g^1, ..., g^s}
 
+    ----------
+    -- Mark --
+    ----------
 
-		-- Todo: check that P is symmetric wrt g
-		groupElements := generateGroup gList; -- Todo get the elements of the group as matrices   Task (1)
-		-- assume that the order of the elements is {g^0, g^1, ..., g^s}
-		-- Todo: Check that the above assumption holds
+    fixedPolytopeList := apply(groupElements, g' -> fixedPolytope(P, g')); -- Todo get the fixed polytopes									Task (2)
 
-		fixedPolytopeList := apply(groupElements, g' -> fixedPolytope(P, g')); -- Todo get the fixed polytopes									Task (2)
-
-		m := #groupElements; -- Number of group elements (since group is abelian)
-		-- We are assuming gList has length 1. If the group is not cyclic we need a different method
+    m := #groupElements; -- Number of group elements (since group is abelian)
+    -- We are assuming gList has length 1. If the group is not cyclic we need a different method
 
 		w := getSymbol "w";
 		-- todo: define this properly with a monoid
