@@ -25,19 +25,6 @@
     
     8. ** Vic ** In doc for `ehrhartSeries`, the return type is not in `frac(QQ[t])`, it's of class
     `Divide` if `R` is unspecified
-    
-    9. ** Ollie **
-    [Ollie: move all the working files to MY FORK and give push access to Victoria and Vincenzo]
-    Tidy up unnecessary files. An example / demo file is good to have at the base level of
-    the repo. But the test files and todos can be moved into another folder. We should also
-    move the `RationalPolytopes.m2` up to the base level.
-
-    To incorpate the packages into M2:
-
-    Create Fork -> Add packages to the Fork -> Pull Request
-
-    Always be checking the examples and other files for things that we may want in the final packages
-    and move them over to the included files.
 
     10. Get Vincenzo and Alex into M2 org to be able to push changes OR use PullRequests
     [consequence of 9.]
@@ -64,7 +51,21 @@
 
 
     1. Fix ReturnDenominator bug (fix tests 6 and 8) in RationalPolytopes [Done]
+
     3. Remove the Normaliz patch [Done]
+
+    9. ** Ollie **
+    [Ollie: move all the working files to MY FORK and give push access to Victoria and Vincenzo]
+    Tidy up unnecessary files. An example / demo file is good to have at the base level of
+    the repo. But the test files and todos can be moved into another folder. We should also
+    move the `RationalPolytopes.m2` up to the base level.
+
+    To incorpate the packages into M2:
+
+    Create Fork -> Add packages to the Fork -> Pull Request
+
+    Always be checking the examples and other files for things that we may want in the final packages
+    and move them over to the included files.
 
 
 
