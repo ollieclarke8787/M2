@@ -49,7 +49,7 @@ assert(Gs#1 == g)
 assert(Gs#2 == g^2)
 ///
 
-TEST /// -* generateGroup genererates S4 when given generators for S4 *-
+TEST /// -* generateGroup generates S4 when given generators for S4 *-
 gList = {matrix{{0,1,0,0},{0,0,1,0},{0,0,0,1},{1,0,0,0}}, matrix{{0,0,1,0},{1,0,0,0},{0,0,0,1},{0,1,0,0}}}
 Gs = generateGroup gList
 assert(#Gs == 24)

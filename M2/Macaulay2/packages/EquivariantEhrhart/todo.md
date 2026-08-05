@@ -1,7 +1,7 @@
 # Current TODOs
 
     2. ** Ollie ** Check Author / Contributor details from workshop participants
-    4. ** Oll & Vic ** Resolve generateGroup problem
+    4. ** Ollie & Vic ** Resolve generateGroup problem
     
     We have a function called `generateGroup` in `EquivariantEhrhart` that takes a list of
     matrices and outputs the group (as a list of elements) that they generate (under
@@ -14,7 +14,7 @@
     tables of general finite groups.
     
     
-    5. ** O **
+    5. ** Ollie **
     (EE) We should add a test to make sure that the cycleRepresentatives and SymmetricGroupTable
     from BettiCharacters has compatible ordering AND make a note of it in the docs
     

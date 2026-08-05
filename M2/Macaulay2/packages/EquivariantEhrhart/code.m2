@@ -250,7 +250,7 @@ equivariantEhrhartSeries (Polyhedron, List) := opts -> (userP, userGList) -> (
 		-- We are assuming gList has length 1. If the group is not cyclic we need a different method
 
 		w := getSymbol "w";
-		-- todo: define this propery with a monoid
+		-- todo: define this properly with a monoid
 		C := QQ[w];
 		QQw := C / ideal cyclotomicPoly(m, w);
 		w = QQw_0;
