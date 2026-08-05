@@ -12,7 +12,7 @@ newPackage(
         {Name => "Mike Cummings", Email => "mike.cummings@uwaterloo.ca", HomePage => "https://mikecummings.ca"}
 	},
     AuxiliaryFiles => false,
-    DebuggingMode => false,
+    DebuggingMode => true,
     PackageExports => {"Polyhedra", "Normaliz"},
     HomePage => "https://github.com/Macaulay2/Workshop-2025-Madison/tree/EhrhartTheory/Durham_2024" -- Temporary Homepage
     )
