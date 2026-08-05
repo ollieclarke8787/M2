@@ -1,23 +1,11 @@
 # Current TODOs
 
     2. ** Ollie ** Check Author / Contributor details from workshop participants
-    4. ** Ollie & Vic ** Resolve generateGroup problem
-    
-    We have a function called `generateGroup` in `EquivariantEhrhart` that takes a list of
-    matrices and outputs the group (as a list of elements) that they generate (under
-    multiplication). Currently, we only use this for cycle groups. Note that for permutation
-    groups, we never work with the full group, only conjugacy class representatives and a
-    minimal (2-element) generating set.
-    
-    It serves minimal use now but could be used more in the future - but maybe we should
-    not be 'reinventing the wheel' and just call GAP (if possible) for getting character
-    tables of general finite groups.
-    
     
     5. ** Ollie **
     (EE) We should add a test to make sure that the cycleRepresentatives and SymmetricGroupTable
     from BettiCharacters has compatible ordering AND make a note of it in the docs
-    
+
     6. ** Vic ** Add M2Version minimum requirement because of the link to the Permutations package (EE)
     and the Normaliz fix (RP)
     
@@ -25,9 +13,6 @@
     
     8. ** Vic ** In doc for `ehrhartSeries`, the return type is not in `frac(QQ[t])`, it's of class
     `Divide` if `R` is unspecified
-
-    10. Get Vincenzo and Alex into M2 org to be able to push changes OR use PullRequests
-    [consequence of 9.]
 
     11. ** Vin **
     Get the tests (hStarVector, ehrhartQP) from Vincenzo incorporated into the package
@@ -46,6 +31,7 @@
     
     2. Add hypersimplex and permutohedron into Polyhedra package as standard constructions 
 
+
 Here's how the code for hypersimplex and permutohedron might be implemented.
 ```macaulay2
 -- could add these two to Polyhedra
@@ -63,6 +49,18 @@ permutohedron ZZ := n -> (
     convexHull transpose matrix permutations n
 )
 ```
+
+    4. Resolve generateGroup problem
+
+    We have a function called `generateGroup` in `EquivariantEhrhart` that takes a list of
+    matrices and outputs the group (as a list of elements) that they generate (under
+    multiplication). Currently, we only use this for cycle groups. Note that for permutation
+    groups, we never work with the full group, only conjugacy class representatives and a
+    minimal (2-element) generating set.
+
+    It serves minimal use now but could be used more in the future - but maybe we should
+    not be 'reinventing the wheel' and just call GAP (if possible) for getting character
+    tables of general finite groups.
 
     
 # DONE
@@ -85,6 +83,8 @@ permutohedron ZZ := n -> (
     Always be checking the examples and other files for things that we may want in the final packages
     and move them over to the included files.
 
+    10. Get Vincenzo and Alex into M2 org to be able to push changes OR use PullRequests
+    [consequence of 9.]
 
 
 
