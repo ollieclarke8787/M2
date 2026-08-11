@@ -90,7 +90,7 @@ quasiPolynomial Matrix := M -> (
 
 net QuasiPolynomial := QP -> (
     description := "QuasiPolynomial of degree " | net(numColumns(QP#coefficients)-1) | " and of period " | net(QP#period);
-    display := net displayQP(QP, Truncate => 5);
+    display := net displayQP(QP, Truncate => 2);
     stack {description, display}
     )
 
@@ -136,7 +136,7 @@ displayQP = method(
 displayQP(QuasiPolynomial) := opts -> QP -> (
     R := monoid[getSymbol "t"];
     t := R_0;
-    if opts.Truncate === null or QP#period <= opts.Truncate or opts.Truncate < 3 then (
+    if opts.Truncate === null or QP#period - 2 <= opts.Truncate or QP#period < 3 then (
         sum for d in 0 .. (numColumns QP#coefficients)-1 list (
             -- the leading coefficient is a constant so we could use this instead:
             --(if d > 0 then (QP#coefficients)_{d} else (QP#coefficients)_{d}^{0}
@@ -152,9 +152,9 @@ displayQP(QuasiPolynomial) := opts -> QP -> (
     else (
         sum for d in 0 .. (numColumns QP#coefficients)-1 list (
             M := (QP#coefficients)_{d};
-            Mcut := M^{0 .. opts.Truncate - 3, numRows QP#coefficients - 1};
+            Mcut := M^{0 .. opts.Truncate - 1, numRows QP#coefficients - 1};
             Mnet := net Mcut;
-            netRows := (for i from 0 to opts.Truncate - 3 list Mnet#i) | {
+            netRows := (for i from 0 to opts.Truncate - 1 list Mnet#i) | {
                 "| " | concatenate(width Mnet - 4: ".") | " |"} | {Mnet#(-1)};
             (stack netRows) expression if d < (numColumns QP#coefficients)-1 then (
                 t^(numColumns (QP#coefficients)-d-1)
@@ -721,6 +721,37 @@ P = convexHull transpose matrix "0,0; 1/2,0; 0,1/2";
 p = ehrhartQP P;
 q = quasiPolynomial matrix{{1/8, 3/4, 1}, {1/8, 1/2, 3/8}};
 assert(p==q)
+///
+
+TEST /// -- (displayQP)
+P = convexHull transpose matrix "0,0; 1/5,0; 0,1/5";
+R := monoid[getSymbol "t"];
+t := R_0;
+p = ehrhartQP P;
+q = (p#coefficients)_{0} expression t^2 + (p#coefficients)_{1} expression t + (p#coefficients)_{2} expression "";
+assert(class q === Sum)
+assert(toString q == toString displayQP(p))
+///
+
+TEST /// -- (Truncate)
+P = convexHull transpose matrix "0,0; 1/7,0; 0,1/7";
+R := monoid[getSymbol "t"];
+t := R_0;
+p = ehrhartQP P;
+trunc = 4;
+q = sum for d in 0 .. (numColumns p#coefficients)-1 list (
+            M := (p#coefficients)_{d};
+            Mcut := M^{0 .. trunc - 1, numRows p#coefficients - 1};
+            Mnet := net Mcut;
+            netRows := (for i from 0 to trunc - 1 list Mnet#i) | {
+                "| " | concatenate(width Mnet - 4: ".") | " |"} | {Mnet#(-1)};
+            (stack netRows) expression if d < (numColumns p#coefficients)-1 then (
+                t^(numColumns (p#coefficients)-d-1)
+                )
+            else ""
+            );
+assert(class q === Sum)
+assert(toString q == toString displayQP(p, Truncate => trunc))
 ///
 
 end
