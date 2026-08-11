@@ -711,6 +711,18 @@ assert value (ES#0 == N);
 assert value (ES#1 == D);
 ///
 
+TEST /// -- (hStarVector)
+P = convexHull transpose matrix "-1,0; 0,-1; 1,0; 0,1";
+assert(hStarVector P == {1,2,1})
+///
+
+TEST /// -- (ehrhartQP)
+P = convexHull transpose matrix "0,0; 1/2,0; 0,1/2";
+p = ehrhartQP P;
+q = quasiPolynomial matrix{{1/8, 3/4, 1}, {1/8, 1/2, 3/8}};
+assert(p==q)
+///
+
 end
 ----
 
