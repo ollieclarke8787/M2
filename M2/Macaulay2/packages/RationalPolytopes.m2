@@ -429,19 +429,23 @@ doc ///
 doc ///
   Key
     ehrhartQP
+    (ehrhartQP, Polyhedron)
+    [ehrhartQP, Strategy]
   Headline
     a function
   Usage
-    L = ehrhartQP(P)
+    QP = ehrhartQP(P)
   Inputs
     P : Polyhedron
       the polyhedron for which we calculate the Ehrhart quasipolynomial
+    Strategy => String
+      either "Normaliz" or "M2", selects the method for computing the Ehrhart quasipolynomial
   Outputs
-    L : List
-      a list of polynomial pieces contributing to the Ehrhart quasipolynomial of P
+    QP : QuasiPolynomial
+      the Ehrhart quasipolynomial of P
   Description
     Text
-      it calculates the Ehrhart quasipolynomial of polyhedron P
+      It calculates the Ehrhart quasipolynomial of the polyhedron P
     Example
       ehrhartQP(convexHull transpose matrix "0,0;1/2,0;0,1/2")
 ///
@@ -462,9 +466,9 @@ doc ///
     hStarPolynomial(P,R)
   Inputs
     P : Polyhedron
-      A convex polyhedron which must be compact
+      a convex polyhedron which must be compact
     R : Ring
-      A ring in at least one variable
+      a ring in at least one variable
     ReturnDenominator => Boolean
       whether to return the denominator of the Ehrhart series
     Strategy => String
@@ -554,6 +558,32 @@ doc ///
     RationalPolytopes
 ///
 
+doc ///
+  Key
+    quasiPolynomial
+  Headline
+    a function
+  Usage
+    QP = quasiPolynomial(M)
+    QP = quasiPolynomial(L)
+  Inputs
+    M : Matrix
+    L : List
+  Outputs
+    QP : QuasiPolynomial
+      a quasipolynomial whose coefficient matrix is M, or whose constituent polynomials are listed in L
+  Description
+    Text
+      Computes the quasipolynomial with coefficient matrix M.
+      Computes the quasipolynomial with constituent polynomials listed in L.
+    Example
+      R = QQ[getSymbol "t"]
+      t = R_0
+      quasiPolynomial(matrix{{1/18,1/2,1},{1/18,7/18,5/9},{1/18,5/18,2/9}})
+      quasiPolynomial({1/18*t^2+1/2*t+1,1/18*t^2+7/18*t+5/9,1/18*t^2+5/18*t+2/9})
+  SeeAlso
+    RationalPolytopes
+///
 
 doc ///
   Key
@@ -564,10 +594,10 @@ doc ///
     p = period(QP)
   Inputs
     QP : QuasiPolynomial
-      A quasipolynomial of which we want to compute the period
+      a quasipolynomial of which we want to compute the period
   Outputs
     p : ZZ
-      The period of QP
+      the period of QP
   Description
     Text
       Computes the period of a quasipolynomial
@@ -577,6 +607,35 @@ doc ///
       period QP1
       QP2 = quasiPolynomial(matrix{{1,1},{1,2},{1,1},{1,1}})
       period QP2
+  SeeAlso
+    RationalPolytopes
+///
+
+doc ///
+  Key
+    displayQP
+    (displayQP, QuasiPolynomial)
+    [displayQP, Truncate]
+  Headline
+    a function
+  Usage
+    displayQP QP
+  Inputs
+    QP : QuasiPolynomial
+      a quasipolynomial we would like to display
+    Truncate => ZZ
+      the starting row index of the coefficient matrix truncated from the output   
+  Outputs
+    : Sum
+      a display of the quasipolynomial
+  Description
+    Text
+      Displays the quasipolynomial in a friendly way.
+    Example
+      P = convexHull transpose matrix {{0,0},{1/7,0},{0,1/7}};
+      p = ehrhartQP P;
+      displayQP(p)
+      displayQP(p, Truncate => 4)
   SeeAlso
     RationalPolytopes
 ///
@@ -591,12 +650,12 @@ doc ///
     L = coefficientMonomial(QP,i)
   Inputs
     QP : QuasiPolynomial
-      A quasipolynomial of which we want to know the coefficients
+      a quasipolynomial of which we want to know the coefficients
     i : ZZ
-      The degree of the monomials of QP of which we want to know the coefficients
+      the degree of the monomials of QP of which we want to know the coefficients
   Outputs
     L : List
-      The coefficients of the monomials of degree i appearing in QP
+      the coefficients of the monomials of degree i appearing in QP
   Description
     Text
       Computes the coefficients of the monomials of degree i appearing in QP
@@ -611,6 +670,9 @@ doc ///
 doc ///
   Key
     ehrhartSeries
+    (ehrhartSeries, Polyhedron, Ring)
+    (ehrhartSeries, Polyhedron)
+    [ehrhartSeries, Strategy]
   Headline
     a method function
   Usage
@@ -618,9 +680,11 @@ doc ///
     ES = ehrhartSeries(P)
   Inputs
     P : Polyhedron
-      The (rational) polyhedron whose Ehrhart series we wish to know
+      the (rational) polyhedron whose Ehrhart series we wish to know
     R : Ring
-      A ring in at least one variable
+      a ring in at least one variable
+    Strategy => String
+      either "Normaliz" or "M2", selects the method for computing the Ehrhart series
   Outputs
     ES : RingElement
       Ehrhart series in the ring R, or in frac(QQ[t]) if R not specified
