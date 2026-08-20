@@ -98,6 +98,15 @@ doc ///
             Computes a representative of each cycle type of the symmetric group, given as permutation matrices.
         Example
             cycleTypeRepresentatives 4
+    Caveat
+        For code maintainance.The representatives are listed in an order concurrent with the
+        output of the function @TO partitions@. The representation ring constructed by
+        the function @TO representationRing@ is built on the function @TO symmetricGroupTable@ from
+        the package @TO BettiCharacters@, which produces a character tale of the symmetric group.
+        For use in this package, we require that the order of the partitions in the character table
+        coincides with the order given by this function. For now, the function @TO partitions@,
+        which is used by both functions to produce the partitions, always returns  partitions in
+        the same order. But this functionality is not claimed by the documentation.
     SeeAlso
         generateGroup
 ///
@@ -342,6 +351,11 @@ doc ///
         Example
             representationRing 7
             representationRing(7, ReturnTable => true)
+    Caveat
+        For code maintainance. Functionality of this package relies delicately on
+        the order of the partitions produced by the function @TO partitions@.
+        For more details, see the Caveat in the documentation of the function
+        @TO cycleTypeRepresentatives@.
     SeeAlso
         cycleTypeRepresentatives
         ReturnTable
@@ -427,7 +441,7 @@ doc///
         return character table
     Description
         Text
-            Set to {\tt true} to return the character table when 
+            Set to {\tt true} to return the character table when
             computing the equivariant Ehrhart series or representation ring.
     SeeAlso
         equivariantEhrhartSeries

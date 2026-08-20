@@ -94,3 +94,18 @@ TEST /// -*check that a cyclic group is generated in order*-
     expectedGroup = {g^0, g^1, g^2, g^3, g^4, g^5};
     assert(generateGroup {g} == expectedGroup);
 ///
+
+TEST /// -*check that symmetric group character table is in the right order*-
+    R = QQ[x_1 .. x_5];
+    T = symmetricGroupTable(R);
+    result = matrix(R, {
+        {1,  1,  1,  1,  1,  1, 1},
+        {-1, 0, -1,  1,  0,  2, 4},
+        {0, -1,  1, -1,  1,  1, 5},
+        {1,  0,  0,  0, -2,  0, 6},
+        {0,  1, -1, -1,  1, -1, 5},
+        {-1, 0,  1,  1,  0, -2, 4},
+        {1, -1, -1,  1,  1, -1, 1}
+        });
+    assert(T.table == result);
+///

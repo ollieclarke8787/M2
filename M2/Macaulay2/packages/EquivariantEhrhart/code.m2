@@ -98,6 +98,8 @@ partitionToPermutation List := List => L -> (
 
 -- get conjugacy class reps for Sn
 -- living as n x n permutation matrices
+-- [Important] this method must produce partitions in the same order as
+--   the function symmetricGroupTable in BettiCharacters
 cycleTypeRepresentatives = method()
 cycleTypeRepresentatives ZZ := List => n -> (
     S := toList \ partitions n;
