@@ -16,7 +16,7 @@ newPackage(
         },
         {
             Name => "Sean Grate",
-            Email => "sean.grate@auburn.edu",
+            Email => "sgrate@iastate.edu",
             HomePage => "https://seangrate.com"
         },
         {
