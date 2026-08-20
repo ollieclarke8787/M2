@@ -1,35 +1,36 @@
 # Current TODOs
 
-    2. ** Ollie ** Check Author / Contributor details from workshop participants
-    
-    5. ** Ollie **
-    (EE) We should add a test to make sure that the cycleRepresentatives and SymmetricGroupTable
-    from BettiCharacters has compatible ordering AND make a note of it in the docs
+2. ** Ollie ** Check Author / Contributor details from workshop participants
+   - [Current Status] I've sent around emails to everyone to see who wants / will remain
+   on the Authors => {..} lists for the packages.
+   So far: other than OC, VC, VR:
+   > Sean Grate replied
+   
 
-    6. ** Vic ** Add M2Version minimum requirement because of the link to the Permutations package (EE)
-    and the Normaliz fix (RP)
+6. ** Vic ** Add M2Version minimum requirement because of the link to the Permutations package (EE)
+   and the Normaliz fix (RP)
     
-    7. ** Vic ** Protect against non-cycle group inputs in `equivariantEhrhartSeries`
+7. ** Vic ** Protect against non-cycle group inputs in `equivariantEhrhartSeries`
     
-    8. ** Vic ** In doc for `ehrhartSeries`, the return type is not in `frac(QQ[t])`, it's of class
-    `Divide` if `R` is unspecified
+8. ** Vic ** In doc for `ehrhartSeries`, the return type is not in `frac(QQ[t])`, it's of class
+   `Divide` if `R` is unspecified
 
-    11. ** Vin **
+11. ** Vin **
     Get the tests (hStarVector, ehrhartQP) from Vincenzo incorporated into the package
 
-    12. ** Vin ** Make sure the tests cover enough cases and fill in any missing doc nodes
+12. ** Vin ** Make sure the tests cover enough cases and fill in any missing doc nodes
 
-    13. ** Everyone ** Read the docs of all packages
+13. ** Everyone ** Read the docs of all packages
     
     
 
 # Long Term / Future TODOs
 
-    1. Implement `equivariantEhrhartSeries` for non-cyclic groups. For this, it would be more
-    fruitful / reasonable to interface to existing Group software E.g. GAP, this might need an
-    interfacing package of its own.
+1. Implement `equivariantEhrhartSeries` for non-cyclic groups. For this, it would be more
+   fruitful / reasonable to interface to existing Group software E.g. GAP, this might need an
+   interfacing package of its own.
     
-    2. Add hypersimplex and permutohedron into Polyhedra package as standard constructions 
+2. Add hypersimplex and permutohedron into Polyhedra package as standard constructions 
 
 
 Here's how the code for hypersimplex and permutohedron might be implemented.
