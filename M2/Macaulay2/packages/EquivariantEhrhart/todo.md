@@ -94,7 +94,7 @@ permutohedron ZZ := n -> (
      This test will fail if something changes in the code that causes the order of the partitions
      to change.
    - Added some caveats to the documentation nodes for `cycleTypeRepresentatives` and
-     `representationRing`. For code maintainance, we require that the function `partitions` must
+     `representationRing`. For code maintenance, we require that the function `partitions` must
      be deterministic. If this fails in the future, then we will need to sort the partitions and
      possibly modify the character table code so that it uses the sorted partitions. 
 

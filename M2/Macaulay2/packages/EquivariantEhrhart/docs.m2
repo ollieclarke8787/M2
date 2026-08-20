@@ -99,7 +99,7 @@ doc ///
         Example
             cycleTypeRepresentatives 4
     Caveat
-        For code maintainance.The representatives are listed in an order concurrent with the
+        For code maintenance.The representatives are listed in an order concurrent with the
         output of the function @TO partitions@. The representation ring constructed by
         the function @TO representationRing@ is built on the function @TO symmetricGroupTable@ from
         the package @TO BettiCharacters@, which produces a character tale of the symmetric group.
@@ -361,7 +361,7 @@ doc ///
             toList \ partitions 7
             symmetricGroupTable(QQ[x_1 .. x_7])
     Caveat
-        For code maintainance. Functionality of this package relies delicately on
+        For code maintenance. Functionality of this package relies delicately on
         the order of the partitions produced by the function @TO partitions@.
         For more details, see the Caveat in the documentation of the function
         @TO cycleTypeRepresentatives@.
