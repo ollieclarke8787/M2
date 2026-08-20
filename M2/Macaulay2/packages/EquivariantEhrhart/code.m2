@@ -203,8 +203,9 @@ equivariantEhrhartSeries (Polyhedron, List) := opts -> (userP, userGList) -> (
     -- Character table has entries cyclotomic extension of QQ
     m := #groupElements;
     C := QQ(monoid[getSymbol "w"]);
+    w := C_0;
     QQw := C / ideal cyclotomicPoly(m, w);
-    w := QQw_0;
+    w = QQw_0;
     -- representation ring
     X := getSymbol "X";
     R := QQw(monoid[X_1 .. X_m]);
