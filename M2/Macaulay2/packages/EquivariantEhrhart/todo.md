@@ -50,28 +50,27 @@ permutohedron ZZ := n -> (
     convexHull transpose matrix permutations n
 )
 ```
+4. Resolve generateGroup problem
 
-    4. Resolve generateGroup problem
+   We have a function called `generateGroup` in `EquivariantEhrhart` that takes a list of
+   matrices and outputs the group (as a list of elements) that they generate (under
+   multiplication). Currently, we only use this for cycle groups. Note that for permutation
+   groups, we never work with the full group, only conjugacy class representatives and a
+   minimal (2-element) generating set.
 
-    We have a function called `generateGroup` in `EquivariantEhrhart` that takes a list of
-    matrices and outputs the group (as a list of elements) that they generate (under
-    multiplication). Currently, we only use this for cycle groups. Note that for permutation
-    groups, we never work with the full group, only conjugacy class representatives and a
-    minimal (2-element) generating set.
-
-    It serves minimal use now but could be used more in the future - but maybe we should
-    not be 'reinventing the wheel' and just call GAP (if possible) for getting character
-    tables of general finite groups.
+   It serves minimal use now but could be used more in the future - but maybe we should
+   not be 'reinventing the wheel' and just call GAP (if possible) for getting character
+   tables of general finite groups.
 
     
 # DONE
 
 
-    1. Fix ReturnDenominator bug (fix tests 6 and 8) in RationalPolytopes [Done]
+1. Fix ReturnDenominator bug (fix tests 6 and 8) in RationalPolytopes [Done]
 
-    3. Remove the Normaliz patch [Done]
+3. Remove the Normaliz patch [Done]
 
-    9. ** Ollie **
+9. ** Ollie **
     [Ollie: move all the working files to MY FORK and give push access to Victoria and Vincenzo]
     Tidy up unnecessary files. An example / demo file is good to have at the base level of
     the repo. But the test files and todos can be moved into another folder. We should also
@@ -84,10 +83,20 @@ permutohedron ZZ := n -> (
     Always be checking the examples and other files for things that we may want in the final packages
     and move them over to the included files.
 
-    10. Get Vincenzo and Alex into M2 org to be able to push changes OR use PullRequests
+10. Get Vincenzo and Alex into M2 org to be able to push changes OR use PullRequests
     [consequence of 9.]
 
+5. ** Ollie **
+   (EE) We should add a test to make sure that the cycleRepresentatives and SymmetricGroupTable
+   from BettiCharacters has compatible ordering AND make a note of it in the docs
 
+   - Added test for character table of S_5.
+     This test will fail if something changes in the code that causes the order of the partitions
+     to change.
+   - Added some caveats to the documentation nodes for `cycleTypeRepresentatives` and
+     `representationRing`. For code maintainance, we require that the function `partitions` must
+     be deterministic. If this fails in the future, then we will need to sort the partitions and
+     possibly modify the character table code so that it uses the sorted partitions. 
 
 
 # Old TODOs 
