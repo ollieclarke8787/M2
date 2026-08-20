@@ -343,14 +343,23 @@ doc ///
     Outputs
         R : Ring
             representation ring of $S_n$ over {\tt QQ}
-        T : CharacterTable
-            the symmetric group table of {\tt QQ[a_1 .. a_n]}
+        T : Matrix
+            the character table of the symmetric group
     Description
         Text
             Creates the representation ring for $S_n$.
         Example
             representationRing 7
             representationRing(7, ReturnTable => true)
+        Text
+            The character table is the table part of the character table
+            produced by the function @TO symmetricGroupTable@ in the
+            package @TO BettiCharacters@. The  order of the columns of
+            the character table corresponds to the output of the
+            function @TO partitions@.
+        Example
+            toList \ partitions 7
+            symmetricGroupTable(QQ[x_1 .. x_7])
     Caveat
         For code maintainance. Functionality of this package relies delicately on
         the order of the partitions produced by the function @TO partitions@.
