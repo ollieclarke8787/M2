@@ -292,3 +292,5 @@ CpMackeyFunctors
 JSONRPC
 MatrixFactorizations
 PathSignatures
+RationalPolytopes
+EquivariantEhrhart
