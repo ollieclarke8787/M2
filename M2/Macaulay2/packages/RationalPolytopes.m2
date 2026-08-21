@@ -440,7 +440,7 @@ doc ///
     following participants of the
     HREF("https://sites.google.com/view/durhamcompalggeom/home","Computational Algebraic Geometry Workshop")
     at the University of Durham (November 2024)
-    for their constributions to the package.
+    for their contributions to the package.
 
     @UL {
     {"Danny Henderson"},

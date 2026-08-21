@@ -33,7 +33,7 @@ doc ///
     Contributors
         In addition to the authors below, we thank the
         following attendees of the 2025 {\em Macaulay2} workshop at the University of Wisconsin
-        for their constributions to the package.
+        for their contributions to the package.
 
         @UL {
         {HREF("https://juliannebarnhart.com/", "Julianna Barnhart")},
