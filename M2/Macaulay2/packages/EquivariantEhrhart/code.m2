@@ -39,9 +39,7 @@ generateGroup List := List => opts -> L -> (
     local g';
     local groupElementsList;
     alarm(opts.MaxComputeTime);
-    -- TODO : to print out the error nicely we can wrap this in a try-cach blockMatrixForm
-    -- Check if we should do this or if there is a better standard practice
-    try (
+    try ( -- try to compute the group within time limit
         if #L == 1 then (
             g = L_0 ;
             gIdentity := id_(target g) ;
@@ -82,7 +80,7 @@ generateGroup List := List => opts -> L -> (
         alarm(0);
         groupElementsList  -- returns list of matrices
         )
-    else (
+    else ( -- ran out of time
         error "time exceeded MaxComputeTime";
         )
     )
