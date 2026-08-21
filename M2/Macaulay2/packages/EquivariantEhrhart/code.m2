@@ -379,12 +379,6 @@ V' = ((transpose F')^(-1) * V)^inds
 newPolytope = convexHull V'
 
 
--- idea ::
-fixedPolytopeList := apply(groupElements, g' -> fixedPolytope(P', g')); -- Todo get the fixed polytopes									Task (2)
-
-hStarList := (Pg -> hStarPolynomial(Pg, Rt, ReturnDenominator => true)) \ fixedPolytopeList;
-
-
 restart
 uninstallPackage "EquivariantEhrhart"
 

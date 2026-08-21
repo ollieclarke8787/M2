@@ -742,21 +742,6 @@ doc ///
   ///
 
 
--*
-    "hStarVector",
-    "ehrhartQP",
-
-    "quasiPolynomial",
-    "displayQP",
-
-TODO:
--- Get Vincenzo and Alex into M2 org to be able to push changes OR use PullRequests
--- Merge in the remaining tests
--- There is a problem with hStarPolynomial using cached results when ReturnDenominator => true
-*-
-
-
-
 
 -* Test section *-
 TEST /// -- (hStarPolynomial)
