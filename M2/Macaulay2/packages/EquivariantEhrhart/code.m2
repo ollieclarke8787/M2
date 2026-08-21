@@ -41,45 +41,50 @@ generateGroup List := List => opts -> L -> (
     alarm(opts.MaxComputeTime);
     -- TODO : to print out the error nicely we can wrap this in a try-cach blockMatrixForm
     -- Check if we should do this or if there is a better standard practice
-    if #L == 1 then (
-        g = L_0 ;
-        gIdentity := id_(target g) ;
-        g' = g ;
-        groupElementsList = {gIdentity};
-        while not (g' == gIdentity) do (
-            groupElementsList = append(groupElementsList, g') ;
-            g' = g'*g ;
+    try (
+        if #L == 1 then (
+            g = L_0 ;
+            gIdentity := id_(target g) ;
+            g' = g ;
+            groupElementsList = {gIdentity};
+            while not (g' == gIdentity) do (
+                groupElementsList = append(groupElementsList, g') ;
+                g' = g'*g ;
+                )
             )
-        )
-    else(
-        -- construct a Cayley table of the group
-        countMults := 0;
-        groupElements := new MutableHashTable from for M in L list M => true;
-        multsToCheck := new MutableList from flatten for i from 0 to #L-1 list for j from 0 to i list (L_i, L_j);
-        while #multsToCheck > 0 do (
-            -- pop one mult
-            (g, h) = remove(multsToCheck, -1);
-            gh = g * h;
-            countMults = countMults +1;
-            if not groupElements#?gh then (
-                groupElements#gh = true;
-                for f in keys groupElements do multsToCheck##multsToCheck = (gh, f);
-                -- note that gh*gh is not necessary to add because we will get to it eventually by gh*g*h
+        else(
+            -- construct a Cayley table of the group
+            countMults := 0;
+            groupElements := new MutableHashTable from for M in L list M => true;
+            multsToCheck := new MutableList from flatten for i from 0 to #L-1 list for j from 0 to i list (L_i, L_j);
+            while #multsToCheck > 0 do (
+                -- pop one mult
+                (g, h) = remove(multsToCheck, -1);
+                gh = g * h;
+                countMults = countMults +1;
+                if not groupElements#?gh then (
+                    groupElements#gh = true;
+                    for f in keys groupElements do multsToCheck##multsToCheck = (gh, f);
+                    -- note that gh*gh is not necessary to add because we will get to it eventually by gh*g*h
+                    if opts.Verbose then (
+                        print("found element: " | net gh | " (total elements: " | toString(#groupElements) | ")");
+                        );
+                    );
                 if opts.Verbose then (
-                    print("found element: " | net gh | " (total elements: " | toString(#groupElements) | ")");
+                    print("-- remains to check " | toString (#multsToCheck) | " multiplicaions");
                     );
                 );
             if opts.Verbose then (
-                print("-- remains to check " | toString (#multsToCheck) | " multiplicaions");
+                print("-- completed in " | toString countMults | " multiplications");
                 );
-            );
-        if opts.Verbose then (
-            print("-- completed in " | toString countMults | " multiplications");
-            );
-        groupElementsList = keys groupElements ;
-        ) ;
-    alarm(0);
-    groupElementsList  -- returns list of matrices
+            groupElementsList = keys groupElements ;
+            ) ;
+        alarm(0);
+        groupElementsList  -- returns list of matrices
+        )
+    else (
+        error "time exceeded MaxComputeTime";
+        )
     )
 
 -- takes a partition L of n and returns a permutation
