@@ -422,7 +422,46 @@ doc ///
   Key
     RationalPolytopes
   Headline
-    A package for Ehrhart theory of rational polytopes
+    Ehrhart theory of rational polytopes
+  Description
+    Text
+      A polytope $P \subseteq \RR^n$ is rational if its vertices
+      have rational coordinates. This package provides methods
+      for computing Ehrhart quasi-polynomials and Ehrhart series
+      for rational polytopes.
+
+  References
+    @UL{
+    {"[BR] M. Beck and S. Robins, ", HREF("https://doi.org/10.1007/978-1-4939-2969-6", EM "Computing the continuous discretely"), ", second edition, Undergraduate Texts in Mathematics, Springer, New York, 2015"}
+    }@
+
+  Contributors
+    In addition to the authors below, we thank the
+    following participants of the
+    HREF("https://sites.google.com/view/durhamcompalggeom/home","Computational Algebraic Geometry Workshop")
+    at the University of Durham (November 2024)
+    for their constributions to the package.
+
+    @UL {
+    {"Danny Henderson"},
+    {HREF("https://alexandermilner.github.io/", "Alex Milner")},
+    {"Benoît Guerville-Ballé"},
+    {"Charlotte Satchwell"}
+    }@
+
+  Subnodes
+    -- Methods
+    hStarPolynomial
+    hStarVector
+    ehrhartQP
+    isPeriod
+    quasiPolynomial
+    period
+    displayQP
+    coefficientMonomial
+    ehrhartSeries
+    -- Optional arguments
+    ReturnDenominator
 ///
 
 
