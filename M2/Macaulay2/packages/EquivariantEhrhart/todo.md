@@ -2,10 +2,12 @@
 
 2. ** Ollie ** Check Author / Contributor details from workshop participants
    - [Current Status] I've sent around emails to everyone to see who wants / will remain
-   on the Authors => {..} lists for the packages.
+   on the Authors => {..} lists for the packages. Added other workshop participants to
+   contributors.
    So far: other than OC, VC, VR:
    > Sean Grate replied
-   
+   > Karolyn So replied -> move details to contributor
+   > Mike Cummings replied
 
 6. ** Vic ** Add M2Version minimum requirement because of the link to the Permutations package (EE)
    and the Normaliz fix (RP)

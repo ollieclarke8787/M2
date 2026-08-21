@@ -18,10 +18,6 @@ newPackage(
             Name => "Sean Grate",
             Email => "sgrate@iastate.edu",
             HomePage => "https://seangrate.com"
-        },
-        {
-            Name => "Karolyn So",
-            Email => "wsa57@sfu.ca"
         }
     },
     Keywords => {"Combinatorics", "Convex Geometry"},

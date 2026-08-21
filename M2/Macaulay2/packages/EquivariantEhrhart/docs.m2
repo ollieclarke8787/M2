@@ -30,6 +30,19 @@ doc ///
         {"[S] A. Stapledon, ", HREF("https://doi.org/10.1016/j.aim.2010.10.019", EM "Equivariant Ehrhart theory"), ", Adv. Math. ", BOLD "226", " (2011), no. 4, 3622--3654"}
         }@
 
+    Contributors
+        In addition to the authors below, we thank the
+        following attendees of the 2025 {\em Macaulay2} workshop at the University of Wisconsin
+        for their constributions to the package.
+
+        @UL {
+        {HREF("https://juliannebarnhart.com/", "Julianna Barnhart")},
+        {"David Crosby"},
+        {"Javier Gonzalez Anaya"},
+        {"Karolyn So"},
+        {"Michael Wijaya"},
+        }@
+
     Subnodes
         -- Methods
         cycleTypeRepresentatives

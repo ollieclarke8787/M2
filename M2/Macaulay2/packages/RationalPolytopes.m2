@@ -5,17 +5,17 @@ newPackage(
     Headline => "A package for Ehrhart theory of rational polytopes",
     Authors => {
         {Name => "Oliver Clarke", Email => "oliver.clarke@ed.ac.uk", HomePage => "https://www.oliverclarkemath.com/"},
-        {Name => "Alex Milner", Email => "A.J.C.Milner@sms.ed.ac.uk", HomePage => ""},
         {Name => "Victoria Schleis", Email => "victoria.m.schleis@durham.ac.uk", HomePage => "https://victoriaschleis.github.io/"},
         {Name => "Vincenzo Reda", Email => "redav@tcd.ie", HomePage => ""},
-        {Name => "Benoît Guerville-Ballé", Email => "benoit.guerville-balle@math.cnrs.fr", HomePage => "https://www.benoit-guervilleballe.com"},
         {Name => "Mike Cummings", Email => "mike.cummings@uwaterloo.ca", HomePage => "https://mikecummings.ca"}
-	},
+        },
     AuxiliaryFiles => false,
     DebuggingMode => true,
     PackageExports => {"Polyhedra", "Normaliz"},
     HomePage => "https://github.com/Macaulay2/Workshop-2025-Madison/tree/EhrhartTheory/Durham_2024" -- Temporary Homepage
     )
+
+-- {Name => , Email => "benoit.guerville-balle@math.cnrs.fr", HomePage => "https://www.benoit-guervilleballe.com"},
 
 export {
     "hStarPolynomial",
