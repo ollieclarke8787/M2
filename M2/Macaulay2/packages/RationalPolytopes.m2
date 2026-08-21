@@ -6,7 +6,7 @@ newPackage(
     Authors => {
         {Name => "Oliver Clarke", Email => "oliver.clarke@ed.ac.uk", HomePage => "https://www.oliverclarkemath.com/"},
         {Name => "Victoria Schleis", Email => "victoria.m.schleis@durham.ac.uk", HomePage => "https://victoriaschleis.github.io/"},
-        {Name => "Vincenzo Reda", Email => "redav@tcd.ie", HomePage => ""},
+        {Name => "Vincenzo Reda", Email => "redav@tcd.ie", HomePage => "https://sites.google.com/tcd.ie/vincenzo-reda/home-page"},
         {Name => "Mike Cummings", Email => "mike.cummings@uwaterloo.ca", HomePage => "https://mikecummings.ca"}
         },
     AuxiliaryFiles => false,

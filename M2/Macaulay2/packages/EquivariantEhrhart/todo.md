@@ -4,11 +4,12 @@
    - [Current Status] I've sent around emails to everyone to see who wants / will remain
    on the Authors => {..} lists for the packages. Added other workshop participants to
    contributors.
-   So far: other than OC, VC, VR (website?):
+   So far: other than OC, VC, VR:
    > Sean Grate replied -> author
    > Karolyn So replied -> moves to contributor
    > Mike Cummings replied -> author
    > Alex Milner replied -> moved to contributor
+   > Vincenzo Reda -> added website
 
 6. ** Vic ** Add M2Version minimum requirement because of the link to the Permutations package (EE)
    and the Normaliz fix (RP)
