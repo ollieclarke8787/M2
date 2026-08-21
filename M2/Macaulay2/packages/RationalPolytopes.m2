@@ -471,7 +471,7 @@ doc ///
     (ehrhartQP, Polyhedron)
     [ehrhartQP, Strategy]
   Headline
-    a function
+    Ehrhart quasipolynomial of a rational polytope
   Usage
     QP = ehrhartQP(P)
   Inputs
@@ -499,7 +499,7 @@ doc ///
     [hStarPolynomial, Strategy]
     [hStarPolynomial, ReturnDenominator]
   Headline
-    the $h^*$-polynomial of a polytope
+    $h^*$-polynomial of a polytope
   Usage
     hStarPolynomial P
     hStarPolynomial(P,R)
@@ -543,7 +543,7 @@ doc ///
     (hStarVector, Polyhedron)
     [hStarVector, Strategy]
   Headline
-    the $h^*$-vector of a polytope
+    $h^*$-vector of a polytope
   Usage
     hStarVector P
   Inputs
@@ -577,7 +577,7 @@ doc ///
   Key
     isPeriod
   Headline
-    a function
+    check the period of a rational polytope
   Usage
     result = isPeriod(M,q)
   Inputs
@@ -601,7 +601,7 @@ doc ///
   Key
     quasiPolynomial
   Headline
-    a function
+    Ehrhart quasipolynomial of a rational polytope
   Usage
     QP = quasiPolynomial(M)
     QP = quasiPolynomial(L)
@@ -628,7 +628,7 @@ doc ///
   Key
     period
   Headline
-    a function
+    period of a rational polytope
   Usage
     p = period(QP)
   Inputs
@@ -656,12 +656,12 @@ doc ///
     (displayQP, QuasiPolynomial)
     [displayQP, Truncate]
   Headline
-    a function
+    display a quasipolynomial
   Usage
     displayQP QP
   Inputs
     QP : QuasiPolynomial
-      a quasipolynomial we would like to display
+      a quasipolynomial to display
     Truncate => ZZ
       the starting row index of the coefficient matrix truncated from the output   
   Outputs
@@ -684,7 +684,7 @@ doc ///
   Key
     coefficientMonomial
   Headline
-    a function
+    list of coefficients in a quasipolynomial
   Usage
     L = coefficientMonomial(QP,i)
   Inputs
@@ -713,7 +713,7 @@ doc ///
     (ehrhartSeries, Polyhedron)
     [ehrhartSeries, Strategy]
   Headline
-    a method function
+    Ehrhart series of a polytope
   Usage
     ES = ehrhartSeries(P, R)
     ES = ehrhartSeries(P)
