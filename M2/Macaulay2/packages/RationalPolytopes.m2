@@ -945,7 +945,8 @@ check "RationalPolytopes"
 
 
 P=convexHull transpose matrix "0;1/2"
-EQP=ehrhartQP(P)
+EQP=ehrhartQP(P);
+
 
 P=convexHull transpose matrix "1,0;-1,0;0,1/2;0,-1/2"
 displayQP ehrhartQP(P)
