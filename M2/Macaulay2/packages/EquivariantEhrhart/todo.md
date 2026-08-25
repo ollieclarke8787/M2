@@ -10,6 +10,7 @@
    > Mike Cummings replied -> author
    > Alex Milner replied -> moved to contributor
    > Vincenzo Reda -> added website
+   > Benoît Guerville-Ballé -> confirmed contributor only
 
 6. ** Vic ** Add M2Version minimum requirement because of the link to the Permutations package (EE)
    and the Normaliz fix (RP)
