@@ -40,8 +40,6 @@ denominator Polyhedron := ZZ => P -> (
     )
 
 
--* QuasiPolynomial Type *-
-
 -- isPeriod(M, q)
 -- M: Matrix
 -- q: ZZ
@@ -72,6 +70,9 @@ collapseMatrix Matrix := Matrix => M -> (
         M^{0 .. q-1}
         ) else M
     )
+
+
+-* QuasiPolynomial Type *-
 
 -- Definition of the Type QuasiPolynomial
 QuasiPolynomial = new Type of HashTable
