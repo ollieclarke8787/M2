@@ -27,7 +27,8 @@ export {
     "displayQP",
     "coefficientMonomial",
     "ehrhartSeries",
-    "ReturnDenominator"
+    "ReturnDenominator",
+    "QuasiPolynomial"
     }
 
 
@@ -94,7 +95,7 @@ net QuasiPolynomial := QP -> (
     stack {description, display}
     )
 
--- construction of quasi polynomial from a list of constituents
+-- construction of quasi-polynomial from a list of constituents
 -- i.e. 'rows' of the matrix of coefficients
 quasiPolynomial List := L -> (
     if not isMember(false, for l in L list instance(l,List)) then (
@@ -112,18 +113,43 @@ quasiPolynomial List := L -> (
         )
     )
 
--- note that we can borrow === function to determine equality of
+-- note that we borrow === function to determine equality of
 -- QuasiPolynomials because we collapse the coefficients matrix
 QuasiPolynomial == QuasiPolynomial := (QP1, QP2) -> QP1 === QP2
 
 
 -- QuasiPolynomial as a function
 QuasiPolynomial ZZ := (QP, t) -> (
-    r := (QP#coefficients)^{t%QP#period};
-    T := matrix for i in 0..(numColumns QP#coefficients - 1) list {t^(numColumns QP#coefficients - i - 1)};
-    (r*T)_(0,0)
+    internalQuasiPolynomial(QP, t)
     )
 
+
+internalQuasiPolynomial = method()
+internalQuasiPolynomial(QuasiPolynomial, ZZ) := QQ => (QP, i) -> (
+    local j;
+    if not QP#cache#?"polynomialList" then (
+        M := QP#coefficients;
+        RMonoid := monoid[getSymbol "t"];
+        R := QQ RMonoid;
+        t := first gens R;
+        r := numRows M;
+        c := numColumns M;
+        polynomials := for i from 0 to r - 1 list (
+            p := 0_R;
+            for j from 0 to c - 1 do (
+                p = p + M_(i,j) * t^(c - 1 - j);
+                );
+            p
+            );
+        QP#cache#"polynomialList" = polynomials;
+        j = i % QP#period;
+        polynomials_j(i)
+        )
+    else (
+        j = i % QP#period;
+        QP#cache#"polynomialList"_j(i)
+        )
+    )
 
 -- Various methods associated to a QuasiPolynomial
 
@@ -196,7 +222,7 @@ coefficientMonomial(QuasiPolynomial,ZZ) := (QP,i) -> (
 -- ehrhartConstituents --
 -- if p is the period of the polytope P then
 -- ehrhartConstituents(P, i) gives the i-th part of the
--- of the Ehrhart quasi polynomial of P
+-- of the Ehrhart quasi-polynomial of P
 -- in other words the (i mod p)th row of the matrix of
 -- coefficients of the Quasi polyomial
 
@@ -471,22 +497,27 @@ doc ///
     (ehrhartQP, Polyhedron)
     [ehrhartQP, Strategy]
   Headline
-    Ehrhart quasipolynomial of a rational polytope
+    Ehrhart quasi-polynomial of a rational polytope
   Usage
     QP = ehrhartQP(P)
   Inputs
     P : Polyhedron
-      the polyhedron for which we calculate the Ehrhart quasipolynomial
+      the polyhedron for which we calculate the Ehrhart quasi-polynomial
     Strategy => String
-      either "Normaliz" or "M2", selects the method for computing the Ehrhart quasipolynomial
+      either "Normaliz" or "M2", selects the method for computing the Ehrhart quasi-polynomial
   Outputs
     QP : QuasiPolynomial
-      the Ehrhart quasipolynomial of P
+      the Ehrhart quasi-polynomial of P
   Description
     Text
-      It calculates the Ehrhart quasipolynomial of the polyhedron P
+      The function calculates the Ehrhart quasi-polynomial of the polyhedron P and returns
+      a @TO "QuasiPolynomial"@ object representing it. We can treat the quasi-polynomial
+      as a function an evaluate it at integers, which gives the number of lattice points in
+      the $n$th dilate of the polytope.
     Example
-      ehrhartQP(convexHull transpose matrix "0,0;1/2,0;0,1/2")
+      QP = ehrhartQP(convexHull transpose matrix "0,0;1/2,0;0,1/2")
+      QP 5
+      QP 10
 ///
 
 
@@ -600,26 +631,45 @@ doc ///
 doc ///
   Key
     quasiPolynomial
+    QuasiPolynomial
+    (symbol SPACE, QuasiPolynomial, ZZ)
   Headline
-    Ehrhart quasipolynomial of a rational polytope
+    Ehrhart quasi-polynomial of a rational polytope
   Usage
     QP = quasiPolynomial(M)
     QP = quasiPolynomial(L)
+    s = QP n
   Inputs
     M : Matrix
     L : List
+    QP : QuasiPolynomial
+    n : ZZ
   Outputs
     QP : QuasiPolynomial
-      a quasipolynomial whose coefficient matrix is M, or whose constituent polynomials are listed in L
+      a quasi-polynomial whose coefficient matrix is M, or whose constituent polynomials are listed in L
+    s : QQ
+      the evaluation of the quasi-polynomial QP at $n$
   Description
     Text
-      Computes the quasipolynomial with coefficient matrix M.
-      Computes the quasipolynomial with constituent polynomials listed in L.
+      Computes the quasi-polynomial with coefficient matrix M.
+      Computes the quasi-polynomial with constituent polynomials listed in L.
     Example
       R = QQ[getSymbol "t"]
       t = R_0
       quasiPolynomial(matrix{{1/18,1/2,1},{1/18,7/18,5/9},{1/18,5/18,2/9}})
       quasiPolynomial({1/18*t^2+1/2*t+1,1/18*t^2+7/18*t+5/9,1/18*t^2+5/18*t+2/9})
+    Text
+      To evaluate the quasi-polynomial at an integer $n$, we evaluate the $n$th (mod period)
+      constituent polynomial of the quasi-polynomial at $n$
+    Example
+      P = convexHull transpose matrix "0,0; 1/5,0; 0,1/5";
+      QP = ehrhartQP P;
+      QP 2
+      QP 7
+      QP 9
+    Text
+      If $n$ is a positive integer, then the evaluation coincides with the number of lattice points
+      in the $n$th dilation of the polytope.
   SeeAlso
     RationalPolytopes
 ///
@@ -633,13 +683,13 @@ doc ///
     p = period(QP)
   Inputs
     QP : QuasiPolynomial
-      a quasipolynomial of which we want to compute the period
+      a quasi-polynomial of which we want to compute the period
   Outputs
     p : ZZ
       the period of QP
   Description
     Text
-      Computes the period of a quasipolynomial
+      Computes the period of a quasi-polynomial
     Example
       period(quasiPolynomial(matrix{{1,2,3},{1,4,5}}))
       QP1 = quasiPolynomial(matrix{{1,1},{1,2},{1,1},{1,2}})
@@ -656,20 +706,20 @@ doc ///
     (displayQP, QuasiPolynomial)
     [displayQP, Truncate]
   Headline
-    display a quasipolynomial
+    display a quasi-polynomial
   Usage
     displayQP QP
   Inputs
     QP : QuasiPolynomial
-      a quasipolynomial to display
+      a quasi-polynomial to display
     Truncate => ZZ
       the starting row index of the coefficient matrix truncated from the output   
   Outputs
     : Sum
-      a display of the quasipolynomial
+      a display of the quasi-polynomial
   Description
     Text
-      Displays the quasipolynomial in a friendly way.
+      Displays the quasi-polynomial in a friendly way.
     Example
       P = convexHull transpose matrix {{0,0},{1/7,0},{0,1/7}};
       p = ehrhartQP P;
@@ -677,6 +727,7 @@ doc ///
       displayQP(p, Truncate => 4)
   SeeAlso
     RationalPolytopes
+    quasiPolynomial
 ///
 
 
@@ -684,12 +735,12 @@ doc ///
   Key
     coefficientMonomial
   Headline
-    list of coefficients in a quasipolynomial
+    list of coefficients in a quasi-polynomial
   Usage
     L = coefficientMonomial(QP,i)
   Inputs
     QP : QuasiPolynomial
-      a quasipolynomial of which we want to know the coefficients
+      a quasi-polynomial of which we want to know the coefficients
     i : ZZ
       the degree of the monomials of QP of which we want to know the coefficients
   Outputs
@@ -704,6 +755,7 @@ doc ///
       coefficientMonomial(quasiPolynomial(matrix{{3,6,7,2},{3,4,4,2},{3,2,5,6}}),2)
   SeeAlso
     RationalPolytopes
+    quasiPolynomial
 ///
 
 doc ///
@@ -840,6 +892,14 @@ q = sum for d in 0 .. (numColumns p#coefficients)-1 list (
             );
 assert(class q === Sum)
 assert(toString q == toString displayQP(p, Truncate => trunc))
+///
+
+TEST /// -- (internalQuasiPolynomial)
+P = convexHull transpose matrix "0,0; 1/5,0; 0,1/5";
+QP = ehrhartQP P;
+assert(1==QP 2)
+assert(3==QP 7)
+assert(3==QP 9)
 ///
 
 end
