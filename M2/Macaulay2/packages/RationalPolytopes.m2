@@ -1,6 +1,6 @@
 newPackage(
     "RationalPolytopes",
-    Version => "0.1",
+    Version => "1.0",
     Date => "",
     Headline => "A package for Ehrhart theory of rational polytopes",
     Authors => {
@@ -14,8 +14,6 @@ newPackage(
     PackageExports => {"Polyhedra", "Normaliz"},
     HomePage => "https://github.com/Macaulay2/Workshop-2025-Madison/tree/EhrhartTheory/Durham_2024" -- Temporary Homepage
     )
-
--- {Name => , Email => "benoit.guerville-balle@math.cnrs.fr", HomePage => "https://www.benoit-guervilleballe.com"},
 
 export {
     "hStarPolynomial",
@@ -76,7 +74,6 @@ collapseMatrix Matrix := Matrix => M -> (
     )
 
 -- Definition of the Type QuasiPolynomial
-
 QuasiPolynomial = new Type of HashTable
 
 quasiPolynomial = method()
@@ -151,7 +148,9 @@ internalQuasiPolynomial(QuasiPolynomial, ZZ) := QQ => (QP, i) -> (
         )
     )
 
+---------------------------------------------------
 -- Various methods associated to a QuasiPolynomial
+---------------------------------------------------
 
 -- display QuasiPolynomial in a friendly way
 displayQP = method(
@@ -164,11 +163,6 @@ displayQP(QuasiPolynomial) := opts -> QP -> (
     t := R_0;
     if opts.Truncate === null or QP#period - 2 <= opts.Truncate or QP#period < 3 then (
         sum for d in 0 .. (numColumns QP#coefficients)-1 list (
-            -- the leading coefficient is a constant so we could use this instead:
-            --(if d > 0 then (QP#coefficients)_{d} else (QP#coefficients)_{d}^{0}
-            --    ) expression if d < (numColumns QP#coefficients)-1 then (
-            --    t^(numColumns (QP#coefficients)-d-1)
-
             (QP#coefficients)_{d} expression if d < (numColumns QP#coefficients)-1 then (
                 t^(numColumns (QP#coefficients)-d-1)
                 )
@@ -215,9 +209,9 @@ coefficientMonomial(QuasiPolynomial,ZZ) := (QP,i) -> (
     M
     )
 
-
+------------------------------
 -* Ehrhart Polynomial part *-
-
+------------------------------
 
 -- ehrhartConstituents --
 -- if p is the period of the polytope P then
@@ -304,9 +298,6 @@ ehrhartQPNormaliz Polyhedron := P -> (
     )
 
 
-
--- hStarPolynomial currently uses M2 code to compute
--- maybe we should add a Normaliz version too
 
 hStarPolynomial = method(
     Options => {
@@ -421,10 +412,6 @@ ehrhartSeries = method(
 ehrhartSeries(Polyhedron, Ring) := opts -> (P, R) -> (
     if not P#cache#?"ehrhartSeries" then (
         (h, d) := hStarPolynomial(P, R, ReturnDenominator => true, Strategy => opts.Strategy);
-        --R' := ring h; -- if R' =!= R then we previously constructed R' so we should ignore R
-        --F := frac R';
-        --h = h_F;
-        --d = d_F;
         P#cache#"ehrhartSeries" = h/d;
         );
     P#cache#"ehrhartSeries"
@@ -442,6 +429,7 @@ ehrhartSeries Polyhedron := opts -> P -> (
 
 ---------------------------------------
 -* Documentation section *-
+---------------------------------------
 beginDocumentation()
 
 doc ///
@@ -907,18 +895,6 @@ end
 
 restart
 needsPackage "RationalPolytopes"
-A = transpose matrix "1,0;-1,0;0,1/2;0,-1/2";
-pN = hStarPolynomial(convexHull A, Strategy => "Normaliz")
-pM2 = hStarPolynomial(convexHull A, Strategy => "M2")
-
-R = ring pN
-
-periodA = period ehrhartQP convexHull A
-k = denominator convexHull A // periodA
-pN * (sum for j from 0 to k-1 list t^(j))^(dim convexHull A + 1)
-
-----
-
 
 --------------------------------------------------
 
@@ -936,128 +912,25 @@ debug needsPackage "RationalPolytopes"
 check "RationalPolytopes"
 
 
+-- Small examples
 P=convexHull transpose matrix "0;1/2"
-EQP=ehrhartQP(P);
+EQP=ehrhartQP(P)
 
 
 P=convexHull transpose matrix "1,0;-1,0;0,1/2;0,-1/2"
-displayQP ehrhartQP(P)
+displayQP ehrhartQP(P) -- period collapse
 
 P=convexHull transpose matrix "-1/2; 1/2"
 ehrhartQP(P)
 
-
-
--- Test of the constructor of the Type QuasiPolynomial
-
-
-S=matrix({{1,2,3},{1,4,5}})
-M=matrix({{1,2,3},{0,1,0},{1,2,3},{0,1,0}})
-
-QP=quasiPolynomial(M)
-QP#period
-print QP
-displayQP QP
-degree QP
-periodQP QP
-coefficientMonomial(QP,0)
-
-R=QQ[x]
-R1=QQ[t]
-L={x^2+3,2*t}
-quasiPolynomial(L)
-
-L={{1,0,3},{2,0}}
-quasiPolynomial(L)
-
------------------------------
-restart
-needsPackage "RationalPolytopes"
-
-debug RationalPolytopes
 
 P = convexHull transpose matrix "1,0;-1,0;0,1/20;-1,11/20"
 latticePoints P
 ehrhartQP(P)
 displayQP(ehrhartQP P, Truncate => 1000)
 
-QP1 = ehrhartQPM2(P)
-QP2 = ehrhartQPNormaliz(P)
-
-QP1 === QP2
-
 hStarPolynomial P
 ehrhartSeries P
 
 hStarPolynomial(P, Strategy => "M2")
 ehrhartSeries(P, Strategy => "M2")
-
-f = ehrhartQP(P)
-displayQP(f)
-
-
--------------------
-
-P = convexHull transpose matrix "0,0;0,1;1,0;1,1"
-f = ehrhartQP(P)
-displayQP(f)
-f 100
-
-C = normaliz(transpose vertices P, "polytope")
-
-
--------------------------
-
-restart
-needsPackage "RationalPolytopes"
-
--- Ax + v >= 0
--- M = [A | v]
-M = matrix "-8,2,500; 1, -1, 0; 2, 7, 3"
-s = "inhom_inequalities"
-
-debug Normaliz
-elapsedTime runNormaliz(M, s);
-oo#"gen" -- list of lattice points as row vectors of a matrix + 1
-
-
-P = polyhedronFromHData(- matrix "-8, 2; 1, -1; 2, 7", matrix "500; 0; 3")
-elapsedTime (latticePoints P);
-
-
-setNmzFile()
-writeNmzData(M, s)
--- runNormaliz(M, s)
-
--- created a temp file with data
--- manually edited it to say inhom_inequalities + LatticePoints
-
-
-dir := select(".*/", nmzFile);
-runDir := if dir != {} then dir#0 else null;
-elapsedTime runProgram(normalizProgram, getNmzExec(), collectNmzOptions() | baseFilename nmzFile,
-		RunDirectory => runDir, Verbose => debugLevel > 0);
-
-    -- return nothing if .gen is not generated
-    if not nmzGen then ( if nmzFilename == "" then rmNmzFiles(); return );
-
-    if not opts.allComputations then (
-	nmzData := readNmzData "gen";
-	rc := new RationalCone from { "gen" => nmzData, "inv" => getNumInvs() };
-	if nmzFilename == "" then rmNmzFiles();
-	return rc);
-
-    -- read all files written
-    files := { "inv" => getNumInvs() };
-    suffixes := { "gen","egn","esp","tri","typ","ht1","ext","tgn" };
-    for s in suffixes do if fileExists(nmzFile | "." | s) then files = append(files, s => readNmzData s);
-
-    L := readMultipleNmzData "cst";
-    files = append(files, "sup" => L#0);
-    files = append(files, "equ" => L#1);
-    files = append(files, "cgr" => L#2);
-
-    C := new RationalCone from files;
-
-    if nmzFilename == "" then rmNmzFiles();
-    C
