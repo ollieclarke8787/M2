@@ -18,15 +18,16 @@ newPackage(
 export {
     "hStarPolynomial",
     "hStarVector",
-    "ehrhartQP",
+    "ehrhartQuasiPolynomial",
     "isPeriod",
     "quasiPolynomial",
     "period",
-    "displayQP",
+    "display",
     "coefficientMonomial",
     "ehrhartSeries",
     "ReturnDenominator",
-    "QuasiPolynomial"
+    "QuasiPolynomial",
+    "toPolynomial"
     }
 
 
@@ -89,8 +90,8 @@ quasiPolynomial Matrix := M -> (
 
 net QuasiPolynomial := QP -> (
     description := "QuasiPolynomial of degree " | net(numColumns(QP#coefficients)-1) | " and of period " | net(QP#period);
-    display := net displayQP(QP, Truncate => 2);
-    stack {description, display}
+    displayQP := net display(QP, Truncate => 2);
+    stack {description, displayQP}
     )
 
 -- construction of quasi-polynomial from a list of constituents
@@ -154,20 +155,31 @@ internalQuasiPolynomial(QuasiPolynomial, ZZ) := QQ => (QP, i) -> (
 ---------------------------------------------------
 
 -- display QuasiPolynomial in a friendly way
-displayQP = method(
+display = method(
     Options => {
         Truncate => null -- null or integer
         }
     )
-displayQP(QuasiPolynomial) := opts -> QP -> (
+
+display(QuasiPolynomial) := opts -> QP -> (
     R := monoid[getSymbol "t"];
     t := R_0;
     if opts.Truncate === null or QP#period - 2 <= opts.Truncate or QP#period < 3 then (
-        sum for d in 0 .. (numColumns QP#coefficients)-1 list (
-            (QP#coefficients)_{d} expression if d < (numColumns QP#coefficients)-1 then (
-                t^(numColumns (QP#coefficients)-d-1)
+        if QP#period == 1 then (
+            sum for d in 0 .. (numColumns QP#coefficients)-1 list (
+                (QP#coefficients)_(0,d) expression if d < (numColumns QP#coefficients)-1 then (
+                    t^(numColumns (QP#coefficients)-d-1)
+                    )
+                else ""
                 )
-            else ""
+            )
+        else (
+            sum for d in 0 .. (numColumns QP#coefficients)-1 list (
+                (QP#coefficients)_{d} expression if d < (numColumns QP#coefficients)-1 then (
+                    t^(numColumns (QP#coefficients)-d-1)
+                    )
+                else ""
+                )
             )
         )
     else (
@@ -210,7 +222,24 @@ coefficientMonomial(QuasiPolynomial,ZZ) := (QP,i) -> (
     M
     )
 
-------------------------------
+
+toPolynomial = method();
+
+toPolynomial QuasiPolynomial := RingElement => QP -> (
+    if QP#period != 1 then
+        error "QuasiPolynomial does not have period 1";
+    R := QQ[getSymbol "t"];
+    t := R_"t";
+    M := QP#coefficients;
+    d := numColumns M - 1;
+    polynomial := 0_R;
+    for j from 0 to d do (
+        polynomial = polynomial + M_(0,j) * R_0^(d-j);
+    );
+    polynomial
+)
+
+
 -* Ehrhart Polynomial part *-
 ------------------------------
 
@@ -242,13 +271,13 @@ ehrhartConstituents(Polyhedron, ZZ):=(P, i) -> (
     )
 
 
-ehrhartQP = method(
+ehrhartQuasiPolynomial = method(
     Options => {
         Strategy => "Normaliz" -- Normaliz or M2
         }
     )
 
-ehrhartQP Polyhedron := QuasiPolynomial => opts -> P -> (
+ehrhartQuasiPolynomial Polyhedron := QuasiPolynomial => opts -> P -> (
     if not P#cache#?"ehrhartQP" then (
         QP := if opts.Strategy == "Normaliz" then (
             ehrhartQPNormaliz P
@@ -421,10 +450,10 @@ ehrhartSeries(Polyhedron, Ring) := opts -> (P, R) -> (
 ehrhartSeries Polyhedron := opts -> P -> (
     if P#cache#?"ehrhartSeriesNumerator" then (
         P#cache#"ehrhartSeries" = P#cache#"ehrhartSeriesNumerator" / P#cache#"ehrhartSeriesDenominator"
-    )
+        )
     else (
         ehrhartSeries(P, QQ[getSymbol "T"], opts)
-    )
+        )
     )
 
 
@@ -468,13 +497,14 @@ doc ///
     -- Methods
     hStarPolynomial
     hStarVector
-    ehrhartQP
+    ehrhartQuasiPolynomial
     isPeriod
     quasiPolynomial
     period
-    displayQP
+    display
     coefficientMonomial
     ehrhartSeries
+    toPolynomial
     -- Optional arguments
     ReturnDenominator
 ///
@@ -482,13 +512,13 @@ doc ///
 
 doc ///
   Key
-    ehrhartQP
-    (ehrhartQP, Polyhedron)
-    [ehrhartQP, Strategy]
+    ehrhartQuasiPolynomial
+    (ehrhartQuasiPolynomial, Polyhedron)
+    [ehrhartQuasiPolynomial, Strategy]
   Headline
     Ehrhart quasi-polynomial of a rational polytope
   Usage
-    QP = ehrhartQP(P)
+    QP = ehrhartQuasiPolynomial(P)
   Inputs
     P : Polyhedron
       the polyhedron for which we calculate the Ehrhart quasi-polynomial
@@ -501,15 +531,37 @@ doc ///
     Text
       The function calculates the Ehrhart quasi-polynomial of the polyhedron P and returns
       a @TO "QuasiPolynomial"@ object representing it. We can treat the quasi-polynomial
-      as a function an evaluate it at integers, which gives the number of lattice points in
+      as a function and evaluate it at integers, which gives the number of lattice points in
       the $n$th dilate of the polytope.
     Example
-      QP = ehrhartQP(convexHull transpose matrix "0,0;1/2,0;0,1/2")
+      QP = ehrhartQuasiPolynomial(convexHull transpose matrix "0,0;1/2,0;0,1/2")
       QP 5
       QP 10
 ///
 
-
+doc ///
+  Key
+    toPolynomial
+    (toPolynomial, QuasiPolynomial)
+  Headline
+    convert a quasi-polynomial of period one to a polynomial
+  Usage
+    p = toPolynomial(QP)
+  Inputs
+    QP : QuasiPolynomial
+      a quasi-polynomial with period equal to one
+  Outputs
+    p : RingElement
+      the corresponding polynomial in a univariate polynomial Ring over QQ
+  Description
+    Text
+      The function calculates the corresponding polynomial to a period one quasi-polynomial.
+    Example
+      QP = ehrhartQuasiPolynomial(convexHull transpose matrix {{0,0,0},{1,0,0},{0,1,0},{1,1,3}})
+      p = toPolynomial QP
+  Caveat
+    An error is raised if the period is not one.
+///
 
 doc ///
   Key
@@ -652,7 +704,7 @@ doc ///
       constituent polynomial of the quasi-polynomial at $n$
     Example
       P = convexHull transpose matrix "0,0; 1/5,0; 0,1/5";
-      QP = ehrhartQP P;
+      QP = ehrhartQuasiPolynomial P;
       QP 2
       QP 7
       QP 9
@@ -691,13 +743,13 @@ doc ///
 
 doc ///
   Key
-    displayQP
-    (displayQP, QuasiPolynomial)
-    [displayQP, Truncate]
+    display
+    (display, QuasiPolynomial)
+    [display, Truncate]
   Headline
     display a quasi-polynomial
   Usage
-    displayQP QP
+    display QP
   Inputs
     QP : QuasiPolynomial
       a quasi-polynomial to display
@@ -711,9 +763,9 @@ doc ///
       Displays the quasi-polynomial in a friendly way.
     Example
       P = convexHull transpose matrix {{0,0},{1/7,0},{0,1/7}};
-      p = ehrhartQP P;
-      displayQP(p)
-      displayQP(p, Truncate => 4)
+      p = ehrhartQuasiPolynomial P;
+      display(p)
+      display(p, Truncate => 4)
   SeeAlso
     RationalPolytopes
     quasiPolynomial
@@ -807,7 +859,7 @@ assert(matrix{{1},{1}} == coefficientMonomial(quasiPolynomial(matrix{{1,2,3},{1,
 
 TEST /// -- (coefficients QuasiPolynomial)
 P = convexHull transpose matrix "0,0;0,1;1,0";
-p = ehrhartQP P;
+p = ehrhartQuasiPolynomial P;
 assert(coefficients p == matrix "1/2, 3/2, 1")
 ///
 
@@ -845,28 +897,28 @@ P = convexHull transpose matrix "-1,0; 0,-1; 1,0; 0,1";
 assert(hStarVector P == {1,2,1})
 ///
 
-TEST /// -- (ehrhartQP)
+TEST /// -- (ehrhartQuasiPolynomial)
 P = convexHull transpose matrix "0,0; 1/2,0; 0,1/2";
-p = ehrhartQP P;
+p = ehrhartQuasiPolynomial P;
 q = quasiPolynomial matrix{{1/8, 3/4, 1}, {1/8, 1/2, 3/8}};
 assert(p==q)
 ///
 
-TEST /// -- (displayQP)
+TEST /// -- (display)
 P = convexHull transpose matrix "0,0; 1/5,0; 0,1/5";
 R := monoid[getSymbol "t"];
 t := R_0;
-p = ehrhartQP P;
+p = ehrhartQuasiPolynomial P;
 q = (p#coefficients)_{0} expression t^2 + (p#coefficients)_{1} expression t + (p#coefficients)_{2} expression "";
 assert(class q === Sum)
-assert(toString q == toString displayQP(p))
+assert(toString q == toString display(p))
 ///
 
 TEST /// -- (Truncate)
 P = convexHull transpose matrix "0,0; 1/7,0; 0,1/7";
 R := monoid[getSymbol "t"];
 t := R_0;
-p = ehrhartQP P;
+p = ehrhartQuasiPolynomial P;
 trunc = 4;
 q = sum for d in 0 .. (numColumns p#coefficients)-1 list (
             M := (p#coefficients)_{d};
@@ -880,12 +932,21 @@ q = sum for d in 0 .. (numColumns p#coefficients)-1 list (
             else ""
             );
 assert(class q === Sum)
-assert(toString q == toString displayQP(p, Truncate => trunc))
+assert(toString q == toString display(p, Truncate => trunc))
+///
+
+TEST /// --(toPolynomial)
+P = convexHull transpose matrix "0,0;1,6/7;7,0";
+QP = ehrhartQuasiPolynomial P;
+p = toPolynomial QP;
+q = 3*t^2+4*t+1;
+assert(instance(p,RingElement))
+assert(q == p)
 ///
 
 TEST /// -- (internalQuasiPolynomial)
 P = convexHull transpose matrix "0,0; 1/5,0; 0,1/5";
-QP = ehrhartQP P;
+QP = ehrhartQuasiPolynomial P;
 assert(1==QP 2)
 assert(3==QP 7)
 assert(3==QP 9)
@@ -919,16 +980,46 @@ EQP=ehrhartQP(P)
 
 
 P=convexHull transpose matrix "1,0;-1,0;0,1/2;0,-1/2"
-displayQP ehrhartQP(P) -- period collapse
+
+display ehrhartQuasiPolynomial(P) -- period collapse
+
 
 P=convexHull transpose matrix "-1/2; 1/2"
 ehrhartQP(P)
 
 
+-- Test of the constructor of the Type QuasiPolynomial
+
+
+S=matrix({{1,2,3},{1,4,5}})
+M=matrix({{1,2,3},{0,1,0},{1,2,3},{0,1,0}})
+
+QP=quasiPolynomial(M)
+QP#period
+print QP
+display QP
+degree QP
+period QP
+coefficientMonomial(QP,0)
+
+R=QQ[x]
+R1=QQ[t]
+L={x^2+3,2*t}
+quasiPolynomial(L)
+
+L={{1,0,3},{2,0}}
+quasiPolynomial(L)
+
+-----------------------------
+restart
+needsPackage "RationalPolytopes"
+
+debug RationalPolytopes
+
 P = convexHull transpose matrix "1,0;-1,0;0,1/20;-1,11/20"
 latticePoints P
-ehrhartQP(P)
-displayQP(ehrhartQP P, Truncate => 1000)
+ehrhartQuasiPolynomial(P)
+display(ehrhartQP P, Truncate => 1000)
 
 hStarPolynomial P
 ehrhartSeries P
